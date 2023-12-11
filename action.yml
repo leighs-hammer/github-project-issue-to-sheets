@@ -1,4 +1,4 @@
-name: 'Transfer GitHub Project Issues into Google Sheets'
+name: 'Transfer Private GitHub Issues into Google Sheets'
 description: 'Do you want to import your Issues info into Google Sheets?'
 branding:
   icon: 'bar-chart-2'  
@@ -13,6 +13,9 @@ inputs:
   sheet-name:
     description: "Google Sheets list name to insert Issues data"
     required: true
+  github-access-token:
+    description: "GitHUb Personal Access Token"
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
