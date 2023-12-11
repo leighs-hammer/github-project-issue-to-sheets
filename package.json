@@ -1,6 +1,6 @@
 {
   "name": "github-project-issue-to-sheets",
-  "version": "2.1.0-alpha",
+  "version": "2.1.1-alpha",
   "description": "Wanna import your Issues info to Google Sheets?",
   "main": "dist/index.js",
   "scripts": {

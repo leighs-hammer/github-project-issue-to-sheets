@@ -24,14 +24,16 @@ export class Importer {
             }
 
             const octokitArgs = {}
+            var logText = "Starting GitHub"
             const githubAccessToken = Core.getInput(Importer.INPUT_GITHUB_TOKEN)
             if (!githubAccessToken) {
                 Core.warning("⚠️ GitHub Access Token is not provided.")
             } else {
                 octokitArgs["auth"] = githubAccessToken
+                logText += " with provided Token"
             }
 
-            Core.info("Auth with GitHub Token...")
+            Core.info(`${logText}...`)
             const octokit = new Octokit(octokitArgs)
             Core.info("Done.")
             Core.endGroup()
