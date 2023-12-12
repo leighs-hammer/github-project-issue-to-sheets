@@ -57,10 +57,29 @@ export class Importer {
                 }
                 page++
             } while (issuesPage.data.length)
-            Core.info("All pages processed:")
-            issuesData.forEach(value => {
-                Core.info(`${Importer.LOG_BULLET_ITEM} ${value.title}`)
-            })
+            Core.info("All pages processed. Searching for assignments...")
+            for (const value of issuesData.filter(value => value.assignees.length)) {
+                Core.info(`Getting events for Issue ${value.title} (#${value.number})...`)
+                var events = await octokit.issues.listEvents({
+                    owner: GitHub.context.repo.owner,
+                    repo: GitHub.context.repo.repo,
+                    issue_number: value.number
+                });
+                Core.info(`Found ${events.data.length} events...`)
+                // update last assignee
+                var lastAssignee = null
+                for (const event of events.data.reverse()) {
+                    if (event.event == "assigned") {
+                        lastAssignee = event.created_at
+                        break
+                    }
+                }
+
+                if (lastAssignee) {
+                    value.assignee_date = lastAssignee
+                }
+            }
+
             Core.endGroup()
 
             Core.startGroup("🔓 Authenticating via Google API Service Account...")
@@ -97,12 +116,14 @@ export class Importer {
                 }
                 issueSheetsData.push([
                     value.number,
-                    value.state,
+                    `${value.state}-${value.state_reason}`,
                     value.pull_request ? "Pull Request" : "Issue",
                     value.title,
                     value.html_url,
                     Object.keys(labels).map(k => labels[k]).join(", "),
+                    value.created_at,
                     Object.keys(assignees).map(k => assignees[k]).join(", "),
+                    value.assignee_date,
                     value.milestone?.title,
                     value.milestone?.state,
                     value.milestone?.due_on,
@@ -124,7 +145,7 @@ export class Importer {
                     majorDimension: "ROWS",
                     range: sheetName + "!A1:1",
                     values: [
-                        ["#", "Status", "Type", "Title", "URI", "Labels", "Assignees", "Milestone", "Status", "Deadline", "URI"]
+                        ["#", "Status", "Type", "Title", "URI", "Labels", "Created At", "Assignees", "Last Assignee Date", "Milestone", "Milestone Status", "Milestone Deadline", "Milestone URI"]
                     ]
                 }
             })
