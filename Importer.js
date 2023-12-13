@@ -103,7 +103,7 @@ class Importer {
                 }
                 issueSheetsData.push([
                     value.number,
-                    `${value.state}-${value.state_reason}`,
+                    value.state + (value.state_reason ? `-${value.state_reason}` : ""),
                     value.pull_request ? "Pull Request" : "Issue",
                     value.title,
                     value.html_url,
