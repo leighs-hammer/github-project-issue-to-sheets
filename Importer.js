@@ -109,6 +109,7 @@ class Importer {
                     value.html_url,
                     Object.keys(labels).map(k => labels[k]).join(", "),
                     value.created_at,
+                    value.closed_at ? value.closed_at : "",
                     Object.keys(assignees).map(k => assignees[k]).join(", "),
                     value.assignee_date,
                     (_a = value.milestone) === null || _a === void 0 ? void 0 : _a.title,
@@ -131,7 +132,7 @@ class Importer {
                     majorDimension: "ROWS",
                     range: sheetName + "!A1:1",
                     values: [
-                        ["#", "Status", "Type", "Title", "URI", "Labels", "Created At", "Assignees", "Last Assignee Date", "Milestone", "Milestone Status", "Milestone Deadline", "Milestone URI"]
+                        ["#", "Status", "Type", "Title", "URI", "Labels", "Created At", "Closed At", "Assignees", "Last Assignee Date", "Milestone", "Milestone Status", "Milestone Deadline", "Milestone URI"]
                     ]
                 }
             });
